@@ -2,7 +2,7 @@
 from tensorflow.keras.datasets import mnist
 from matplotlib import pyplot as plt
 import numpy as np
-
+from numpy import load
 
 (trainX, trainY),(testX,testY) = mnist.load_data()
 
@@ -31,3 +31,10 @@ print(type(trainY[0]))
 #The associated label 0-9 can also be printed for each image of a number
 #print(trainY[4])
 
+# plot first five images
+
+for i in range(5):
+    plt.imshow(trainX[i], cmap=plt.get_cmap('gray'))
+    plt.pause(1)
+    plt.show(block=False)
+    plt.close()
