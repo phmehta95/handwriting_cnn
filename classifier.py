@@ -3,6 +3,10 @@ from tensorflow.keras.datasets import mnist
 from matplotlib import pyplot as plt
 import numpy as np
 from numpy import load
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import Dropout
+from tensorflow.keras.utils import to_categorical
 
 (trainX, trainY),(testX,testY) = mnist.load_data()
 
@@ -38,3 +42,27 @@ for i in range(5):
     plt.pause(1)
     plt.show(block=False)
     plt.close()
+
+#Flatten 28*28 images to a 794 length pixel vector for each image
+
+num_pixels = trainX.shape[1] * trainX.shape[2]
+print (num_pixels)
+
+#Reducing memory requirements to be 32-bit (default precision type used by Keras)
+trainX = trainX.reshape((trainX.shape[0], num_pixels)).astype('float32')
+testX = testX.reshape((testX.shape[0], num_pixels)).astype('float32')
+
+#Scaling grayscale value inputs so instead of being between 0 and 255, they are between 0 and 1
+trainX = trainX/255
+testX = testX/255
+
+print (trainX[1],testX[2])
+
+#Multi-class classification and one-hot encoding
+#One-hot encoding is used to represent categorical variables as numerical values in a machine learning model - this avoids problem in label-encdoing where labels assigned to the categorical variables. For our classifier, the output values are numbers from 0-9 which if each output number has a numerical label applied to it would produce an ordinal relationship between them -> this could lead to a bias in the weights applied by a NN  - so using one-hot encoding would remove this ordinal relationship. This is done by using the "to_categorical" function in Keras.
+
+#One hot encoder outputs
+
+trainY = to_categorical(trainY)
+testY = to_categorical(testY)
+num_classes = testY.shape[1]
