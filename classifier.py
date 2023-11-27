@@ -66,3 +66,31 @@ print (trainX[1],testX[2])
 trainY = to_categorical(trainY)
 testY = to_categorical(testY)
 num_classes = testY.shape[1]
+
+
+#Defining baseline model
+#The Dense layer is the layer that contains all the neurons that are deeply connected within themselves -  every neuron in the dense layer takes the input from all the other neurons of the previous layer.
+
+#Relu and Softmax are types of activation functions - see the README for more information about activation functions
+
+#Categorical_crossentropy is a loss function that can be used when there are two or more label classes. If we were using integers as labels instead of one_hot encoding we would use the Keras SparseCategoricalCrossentropy loss models.
+
+#ADAM is a gradient descent algorithm used to calculate the weights for the model - see the README for more information about how NN weights are calculated.
+
+def baseline_model():
+    #Create model
+    model = Sequential()
+    model.add(Dense(num_pixels, input_shape=(num_pixels,), kernel_initializer='normal', activation='relu'))
+    model.add(Dense(num_classes, kernel_initializer='normal', activation='softmax'))
+    # Compile model
+    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    return model
+
+
+#Building the baseline model
+model = baseline_model()
+#Fit the model
+model.fit(trainX, trainY, validation_data=(testX, testY), epochs=10, batch_size=200, verbose=2)
+# Final evaluation of the model
+scores = model.evaluate(testX, testY, verbose=0)
+print("Baseline Error: %.2f%%" % (100-scores[1]*100))
