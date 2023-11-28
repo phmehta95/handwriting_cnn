@@ -7,6 +7,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.layers import Dropout
 from tensorflow.keras.utils import to_categorical
+from keras.callbacks import CSVLogger
 
 (trainX, trainY),(testX,testY) = mnist.load_data()
 
@@ -89,8 +90,21 @@ def baseline_model():
 
 #Building the baseline model
 model = baseline_model()
+
+#Setting up csv_logger to save model history
+
+csv_logger = CSVLogger("training.log", separator=",", append="False")
+
 #Fit the model
-model.fit(trainX, trainY, validation_data=(testX, testY), epochs=10, batch_size=200, verbose=2)
+history = model.fit(trainX, trainY, validation_data=(testX, testY), epochs=10, batch_size=200, verbose=2, callbacks=[csv_logger])
+
 # Final evaluation of the model
 scores = model.evaluate(testX, testY, verbose=0)
 print("Baseline Error: %.2f%%" % (100-scores[1]*100))
+
+#Saving model to .h5 file for later use
+model.save("handwriting_cnn.h5")
+
+
+
+
