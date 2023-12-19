@@ -47,18 +47,23 @@ def evaluate(reconstructed_model):
     
     dataGen = ImageDataGenerator(rotation_range=15,width_shift_range=0.2,height_shift_range=0.2,shear_range=0.15,zoom_range=[0.5,2],validation_split=0.2)
 
-    train_generator = dataGen.flow(trainX, trainY, batch_size=64, shuffle=True, seed=2, save_to_dir=None, subset='training')
-
-    validation_generator = dataGen.flow(trainX, trainY, batch_size=64, shuffle=True, seed=2, save_to_dir=None, subset='validation')
-
-    batch_size = 126
-    num_test_samples = len(validation_generator.filenames)
+    trainX = trainX.reshape(60000,28,28,1)
+    testX = testX.reshape((testX.shape[0], 28 * 28 * 1))
+    trainY = trainY.reshape(60000,1,1,1)
     
-    
-    Y_pred = reconstructed_model.predict_generator(validation_generator, num_test_samples // batch_size + 1)
-    y_pred = np.argmax(Y_pred, axis=1)
+    train_generator = dataGen.flow(trainX, trainY, shuffle=True, seed=2, save_to_dir=None, subset='training')
 
-    print(confusion_matrix(validaation_generator.classes, y_pred))
+    validation_generator = dataGen.flow(trainX, trainY, shuffle=True, seed=2, save_to_dir=None, subset='validation')
+
+    batch_size = 100
+    #num_test_samples = len(validation_generator.filenames)
+    num_test_samples = 10000
+    
+    #Y_pred = reconstructed_model.predict_generator(validation_generator, num_test_samples // batch_size + 1)
+    Y_pred = reconstructed_model.predict(testX)
+    Y_pred = Y_pred.argmax(axis=1)
+
+    print(confusion_matrix(testY, Y_pred))
     
 
 evaluate(reconstructed_model)
