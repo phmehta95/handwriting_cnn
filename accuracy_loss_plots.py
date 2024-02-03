@@ -64,8 +64,39 @@ def evaluate(reconstructed_model):
     Y_pred = Y_pred.argmax(axis=1)
 
     print(confusion_matrix(testY, Y_pred))
+    global cfm
+    cfm = confusion_matrix(testY, Y_pred)
+
+    #Making Classification Report
+
+    print('\n\nClassification Report\n')
+    target_names = ["0","1","2","3","4","5","6","7","8","9"]
+    print(classification_report(testY, Y_pred, target_names\
+=target_names))
+    global crp
+    crp = classification_report(testY, Y_pred, target_names\
+=target_names, output_dict=True)
     
-
 evaluate(reconstructed_model)
+print(cfm)
 
-####need to reshape training and testing datasets after loading it in so dataGen can read it
+
+#Making Confusion Matrix look pretty
+
+classes = ["0","1","2","3","4","5","6","7","8","9"]
+
+df_cfm = pd.DataFrame(cfm, index = classes, columns = classes)
+plt.figure(figsize = (10,7))
+cfm_plot = sn.heatmap(df_cfm, annot=True, cmap = "BuPu", fmt="d")
+plt.xlabel("Classifier Prediction")
+plt.ylabel("Actual [Truth]")
+cfm_plot.figure.savefig("confusion_matrix.png")
+
+
+#Plotting classification report
+df_crp = pd.DataFrame(crp)
+print(df_crp.to_string())
+crp_plot = df_crp.iloc[:3, :10].T.plot(kind='bar',figsize=(12,7))
+plt.legend(loc='center left', bbox_to_anchor=(1.0, 0.5))
+crp_plot.figure.savefig("classification_report.png")
+plt.show()

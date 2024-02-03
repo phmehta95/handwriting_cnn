@@ -11,7 +11,7 @@ import cv2
 
 reconstructed_model = tf.keras.models.load_model("/home/pruthvi/Desktop/handwriting_cnn/handwriting_cnn.h5")
 
-directory = "/home/pruthvi/Desktop/handwriting_cnn/external_test_data/number6.png"
+directory = "/home/pruthvi/Desktop/handwriting_cnn/external_test_data/number7.jpg"
 
 #Predicting images
 image = cv2.imread(directory, cv2.IMREAD_GRAYSCALE) #convert to greyscale 
